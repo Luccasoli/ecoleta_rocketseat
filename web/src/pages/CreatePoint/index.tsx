@@ -10,6 +10,7 @@ import useCities from './hooks/useCities';
 import { LeafletMouseEvent, LatLngExpression } from 'leaflet';
 import useCurrentPosition from './hooks/useCurrentPosition';
 import api from '../../services/api';
+import Dropzone from '../../components/Dropzone';
 
 export default function CreatePoint(): ReactElement {
     const history = useHistory();
@@ -18,6 +19,7 @@ export default function CreatePoint(): ReactElement {
 
     const [selectedUF, setSelectedUF] = useState('');
     const [selectedCity, setSelectedCity] = useState('');
+    const [selectedImage, setSelectedImage] = useState<File>();
 
     const UFs = useUFs();
     const cities = useCities(selectedUF);
@@ -59,18 +61,40 @@ export default function CreatePoint(): ReactElement {
         const [latitude, longitude] = selectedPosition as [number, number];
         const items = selectedItems;
 
-        const body = {
-            name,
-            email,
-            whatsapp,
-            uf,
-            city,
-            latitude,
-            longitude,
-            items,
-        };
+        // Validation
+        if (!selectedImage) {
+            alert('Insira uma imagem do seu ponto de coleta!');
+            return;
+        }
 
-        await api.post('/points', body);
+        if (!name || !email || !uf) {
+            alert('Insira os dados do seu ponto de coleta!');
+            return;
+        }
+
+        if (!latitude || !longitude || !city || !uf) {
+            alert('Insira o endereço do seu ponto de coleta!');
+            return;
+        }
+
+        if (!items) {
+            alert('Escolha ao menos 1 item colétavel pelo seu ponto de coleta!');
+            return;
+        }
+
+        const data = new FormData();
+
+        data.append('name', name);
+        data.append('email', email);
+        data.append('whatsapp', whatsapp);
+        data.append('uf', uf);
+        data.append('city', city);
+        data.append('latitude', String(latitude));
+        data.append('longitude', String(longitude));
+        data.append('items', items.join(','));
+        data.append('image', selectedImage);
+
+        await api.post('/points', data);
 
         alert('Ponto de coleta criado com sucesso!');
         history.push('/');
@@ -93,6 +117,8 @@ export default function CreatePoint(): ReactElement {
                 <h1>
                     Cadastro do <br /> Ponto de Coleta
                 </h1>
+
+                <Dropzone onFileUploaded={setSelectedImage} />
 
                 <fieldset>
                     <legend>

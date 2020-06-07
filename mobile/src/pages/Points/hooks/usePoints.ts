@@ -7,6 +7,7 @@ interface Point {
   image: string;
   latitude: number;
   longitude: number;
+  image_url: string;
 }
 
 const usePoints = ({

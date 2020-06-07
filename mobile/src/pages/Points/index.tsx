@@ -82,7 +82,7 @@ export default function Points(): ReactElement {
               }
               style={styles.map}
             >
-              {points.map(({ id, image, latitude, longitude, name }) => (
+              {points.map(({ id, image_url, latitude, longitude, name }) => (
                 <Marker
                   key={id}
                   onPress={() => handleNavigateToDetail(id)}
@@ -93,7 +93,7 @@ export default function Points(): ReactElement {
                     <Image
                       style={styles.mapMarkerImage}
                       source={{
-                        uri: image,
+                        uri: image_url,
                       }}
                     />
                     <Text style={styles.mapMarkerTitle}>{name}</Text>

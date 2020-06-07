@@ -53,7 +53,7 @@ export default function Detail({}: Props): ReactElement {
         <Image
           style={styles.pointImage}
           source={{
-            uri: point.image,
+            uri: point.image_url,
           }}
         />
 

@@ -9,6 +9,7 @@ export interface ApiResponse {
 export interface Point {
   id: number;
   image: string;
+  image_url: string;
   name: string;
   email: string;
   whatsapp: string;
